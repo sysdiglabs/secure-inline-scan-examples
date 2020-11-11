@@ -1,25 +1,13 @@
 ---
 title: Sysdig Secure Inline Scan Examples
-description: Examples and integrations information
 summary: >
-    This repository contains examples and information about how to use Sysdig Secure inline scan in different integrations and use case scenarios.
+  This is not a comprehensive catalog of examples for all integrations available, but a live document where we continually publish more information as we see users need it.
+  We do try to keep a list of links to all integrations and toher related websites that you may find useful.
 ---
-# Table of Content
 
-* TOC
-{:toc}
+# Examples
 
-# Introduction
-
-This is not a comprehensive catalog of _examples_ for all integrations available, but a live document where we continually publish more information as we see users need it. We do try to keep a list of links to all integrations and toher related websites that you may find useful.
-
-## Issues and pull requests
-
-If you find a related topic lacks enough information, or some problem with any of the existing examples, please file a issue in this repository. Pull requests to ammend any existing information or examples are also welcomed.
-
-# Secure Inline Scan Examples
-
-In this repository you can find the following examples in alphabetical order:
+In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/) you can find the following examples in alphabetical order:
 
 * [Google Cloud Build](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/google-cloud-build)
 * Jenkins
@@ -42,7 +30,6 @@ These integrations have a specific entry in their respective CI/CD catalogs:
 
   * [Jenkins plugin](https://plugins.jenkins.io/sysdig-secure/)
   * [GitHub Action](https://github.com/marketplace/actions/sysdig-secure-inline-scan)
-
 
 ## Documentation pages
 
@@ -71,6 +58,6 @@ Blog articles contain detailed step by step information, but may be out of date 
 * [Docker scanning for Jenkins CI/CD security with the Sysdig Secure plugin](https://sysdig.com/blog/docker-scanning-jenkins/) <nobr>📅 2018-09-05</nobr>
 * [Scanning images in Azure Container Registry](https://sysdig.com/blog/scanning-images-in-azure-container-registry/) <nobr>📅 2018-09-04</nobr>
 
+# Contributing
 
-
-
+If you find a related topic lacks enough information, or some problem with any of the existing examples, please file a issue in this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/). Pull requests to ammend any existing information or examples are also welcomed.
