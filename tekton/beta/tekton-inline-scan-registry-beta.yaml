@@ -70,7 +70,7 @@ spec:
         - --context=$(params.pathToContext)
 
     - name: scan
-      image: sysdiglabs/secure-inline-scan:2
+      image: quay.io/sysdig/secure-inline-scan:2
       args:
         - --registry-auth-file
         - /tekton/creds/.docker/config.json

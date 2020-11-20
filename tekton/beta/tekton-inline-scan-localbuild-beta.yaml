@@ -68,7 +68,7 @@ spec:
         - --no-push
 
     - name: scan
-      image: sysdiglabs/secure-inline-scan:2
+      image: quay.io/sysdig/secure-inline-scan:2
       args:
         - --storage-type
         - oci-dir

@@ -14,7 +14,7 @@ You have to define a scanning step after building an image in a Tekton task, so 
 
 ```yaml
   - name: scan
-    image: sysdiglabs/secure-inline-scan:2
+    image: quay.io/sysdig/secure-inline-scan:2
     args:
       - --storage-type
       - oci-dir
@@ -76,7 +76,7 @@ spec:
         - --no-push
 
     - name: scan
-      image: sysdiglabs/secure-inline-scan:2
+      image: quay.io/sysdig/secure-inline-scan:2
       args:
         - --storage-type
         - oci-dir
