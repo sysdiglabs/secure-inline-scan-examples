@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# v2: Updated to use sysdiglabs/secure-inline-scan:2
+# v2: Updated to use quay.io/sysdig/secure-inline-scan:2
 
 # This is an example pipeline execution as a Bash script of how to
 # execute an inline scan with Sysdig without requiring priviledges.
@@ -52,7 +52,7 @@ function scan {
     echo
     echo "> Scan"
 
-    docker run -v $PWD:/workspace sysdiglabs/secure-inline-scan:2 \
+    docker run -v $PWD:/workspace quay.io/sysdig/secure-inline-scan:2 \
         -s https://secure.sysdig.com \
         --storage-type oci-dir \
         --storage-path /workspace/oci \

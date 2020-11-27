@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Uses sysdiglabs/secure-inline-scan:2
+# Uses quay.io/sysdig/secure-inline-scan:2
 
 # This is an example script that scans from a private registry
 # with Sysdig without requiring priviledges.
@@ -50,7 +50,7 @@ function scan {
 
     docker run \
         -v $PWD:/workspace \
-        sysdiglabs/secure-inline-scan:2 \
+        quay.io/sysdig/secure-inline-scan:2 \
         --registry-auth-file /workspace/docker-config.json \
         -k $SYSDIG_SECURE_API_TOKEN \
         -s https://secure.sysdig.com \
