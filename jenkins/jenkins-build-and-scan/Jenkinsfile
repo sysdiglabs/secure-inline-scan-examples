@@ -30,7 +30,6 @@ spec:
     }
     
     environment {
-        DOCKER = credentials('docker-repository-credentials')
         SECURE_API_KEY = credentials('sysdig-secure-api-credentials')
     }
     
@@ -63,7 +62,7 @@ EOF
         stage('Scanning Image') {
             steps {
                 container("inline-scan") {
-                    sh "/sysdig-inline-scan.sh -k ${SECURE_API_KEY_PSW} --storage-type oci-dir --storage-path \"${WORKSPACE}/oci\" ${IMAGE_NAME}"
+                    sh "/sysdig-inline-scan.sh --sysdig-token ${SECURE_API_KEY_PSW} --storage-type oci-dir --storage-path \"${WORKSPACE}/oci\" ${IMAGE_NAME}"
                 }
             }
         }
