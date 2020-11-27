@@ -18,7 +18,7 @@ spec:
         command: ['cat']
         tty: true
       - name: inline-scan
-        image: sysdiglabs/secure-inline-scan:2
+        image: quay.io/sysdig/secure-inline-scan:2
         command: ['cat']
         tty: true
 """
