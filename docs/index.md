@@ -2,7 +2,7 @@
 title: Sysdig Secure Inline Scan Examples
 summary: >
   This is not a comprehensive catalog of examples for all integrations available, but a live document where we continually publish more information as we see users need it.
-  We do try to keep a list of links to all integrations and toher related websites that you may find useful.
+  We do try to keep a list of links to all integrations and other related websites that you may find useful.
 ---
 
 # Examples
@@ -11,8 +11,9 @@ In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/)
 
 * [Google Cloud Build](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/google-cloud-build)
 * Jenkins
-  * [Build and scan](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-build-and-scan)
   * [Scan from repository](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-scan-from-repo)
+  * [Build and scan](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-build-push-scan-from-repo)
+  * [Build, push and scan from repository](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-build-and-scan)
 * [Tekton](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton)
   * [Tekton alpha API](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton/alpha)
   * [Tekton beta API](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton/beta)

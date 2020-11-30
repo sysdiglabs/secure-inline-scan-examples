@@ -10,7 +10,7 @@ It is not a comprehensive catalog of _examples_ for all integrations available, 
 
 ## Issues and pull requests
 
-If you find a related topic lacks enough information, or some problem with any of the existing examples, please file a issue in this repository. Pull requests to ammend any existing information or examples are also welcomed.
+If you find a related topic lacks enough information, or some problem with any of the existing examples, please file a issue in this repository. Pull requests to amend any existing information or examples are also welcomed.
 
 ## More information
 
