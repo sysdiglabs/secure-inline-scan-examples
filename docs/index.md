@@ -5,7 +5,108 @@ summary: >
   We do try to keep a list of links to all integrations and other related websites that you may find useful.
 ---
 
-# Examples
+# Common scenarios & recipes
+
+## Scan local image, built using docker
+
+```
+#Build the image locally
+docker build -t <image-name> .
+
+#Scan the image, available on local docker. Mounting docker socket is required
+docker run --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-url <omitted> \
+    --sysdig-token <omitted> \
+    --storage-type docker-daemon \
+    --storage-path /var/run/docker.sock \
+    <image-name>
+```
+
+## Local image (provided docker archive)
+
+Assuming the image <image-name> is avaiable as an image tarball at `image.tar`.
+
+For example, the command `docker save <image-name> -o image.tar` creates a tarball for <image-name>.
+
+```
+docker run --rm \
+    -v ${PWD}/image.tar:/tmp/image.tar \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-url <omitted> \
+    --sysdig-token <omitted> \
+    --storage-type docker-archive \
+    --storage-path /tmp/image.tar \
+    <image-name>
+```
+
+## Public registry image
+
+Example: scan `alpine` image from public registry. The scanner will pull and scan it.
+
+```
+docker run --rm \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-url <omitted> \
+    --sysdig-token <omitted> \
+    alpine
+```
+
+## Private registry image
+
+To scan images from private registries, you might need to provide credentials:
+
+```
+docker run --rm \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-url <omitted> \
+    --sysdig-token <omitted> \
+    --registry-auth-basic <user:passw> \
+    <image-name>
+```
+
+Authentication methods available are:
+* `--registry-auth-basic` for authenticating via http basic auth
+* `--registry-auth-file` for authenticating via docker/skopeo credentials file
+* `--registry-auth-token` for authenticating via registry token
+
+## Containers-storage (cri-o, podman, buildah and others)
+
+Scan images from container runtimes using containers-storage format:
+
+```
+#Build an image using buildah from a Dockerfile
+buildah build-using-dockerfile -t myimage:latest
+
+#Scan the image. Options '-u root' and '--privileged' might be needed depending
+#on the access permissions for /var/lib/containers
+docker run \
+    -u root --privileged \
+    -v /var/lib/containers:/var/lib/containers \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --storage-type cri-o \
+    --sysdig-token <omitted> \
+    localhost/myimage:latest
+```
+
+Example for an image pulled with podman
+
+```
+podman pull docker.io/library/alpine
+
+#Scan the image. Options '-u root' and '--privileged' might be needed depending
+#on the access permissions for /var/lib/containers
+docker run \
+    -u root --privileged \
+    -v /var/lib/containers:/var/lib/containers \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --storage-type cri-o \
+    --sysdig-token <omitted> \
+    docker.io/library/alpine
+```
+
+# Other integrations and examples
 
 In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/) you can find the following examples in alphabetical order:
 
