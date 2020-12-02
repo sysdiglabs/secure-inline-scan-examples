@@ -28,7 +28,7 @@ You have to define a scanning step after building an image in a Tekton task, so 
         valueFrom:
           secretKeyRef:
             name: sysdig-secrets
-            key: sysdig-secure-api-key
+            key: sysdig-secure-api-token
 ```
 
 You'll need to add a secret for your Sysdig Secure API token, and reference it in the service account definition that executes the pipeline, as you can see in the [full pipeline example for beta Tekton API](./beta/tekton-inline-scan-localbuild-beta.yaml).
@@ -90,7 +90,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sysdig-secrets
-              key: sysdig-secure-api-key
+              key: sysdig-secure-api-token
 
     - name: push
       image: quay.io/skopeo/stable:v1.1.1
