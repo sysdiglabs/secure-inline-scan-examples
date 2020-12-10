@@ -158,7 +158,6 @@ Blog articles contain detailed step by step information, but may be out of date 
 * [Inline Image Scanning for AWS CodePipeline and AWS CodeBuild](https://sysdig.com/blog/image-scanning-aws-codepipeline-codebuild/) <nobr>📅 2019-11-26</nobr>
 * [Image scanning for Azure Pipelines](https://sysdig.com/blog/image-scanning-azure-pipelines/) <nobr>📅 2019-10-29
 * [Docker scanning for Jenkins CI/CD security with the Sysdig Secure plugin](https://sysdig.com/blog/docker-scanning-jenkins/) <nobr>📅 2018-09-05</nobr>
-* [Scanning images in Azure Container Registry](https://sysdig.com/blog/scanning-images-in-azure-container-registry/) <nobr>📅 2018-09-04</nobr>
 
 # Contributing
 
