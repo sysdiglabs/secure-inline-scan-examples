@@ -26,9 +26,9 @@ docker run --rm \
 
 ## Local image (provided docker archive)
 
-Assuming the image <image-name> is avaiable as an image tarball at `image.tar`.
+Assuming the image `<image-name>` is available as an image tarball at `image.tar`.
 
-For example, the command `docker save <image-name> -o image.tar` creates a tarball for <image-name>.
+For example, the command `docker save <image-name> -o image.tar` creates a tarball for `<image-name>`.
 
 ```
 docker run --rm \
