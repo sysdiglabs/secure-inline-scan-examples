@@ -106,6 +106,26 @@ docker run \
     docker.io/library/alpine
 ```
 
+## Using a proxy
+
+To use a proxy, set the standard `http_proxy` and `https_proxy` variables when running the container.
+
+Example:
+
+```
+docker run --rm \
+    -e http_proxy="http://my-proxy:3128" \
+    -e https_proxy="http://my-proxy:3128" \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-url <omitted> \
+    --sysdig-token <omitted> \
+    alpine
+```
+
+Both `http_proxy` and `https_proxy` variables are required, as some tools will use per-scheme proxy.
+
+The `no_proxy` variable can be used to define a list of hosts that don't use the proxy.
+
 # Other integrations and examples
 
 In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/) you can find the following examples in alphabetical order:
