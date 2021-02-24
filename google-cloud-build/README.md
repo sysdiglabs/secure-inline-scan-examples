@@ -9,6 +9,8 @@
 
 ![Cloud Build workflow with Sysdig inline image scanning](cloud-build-workflow-inline-scan.drawio.svg)
 
+In this example, the Sysdig API Token is stored as a secret in Secrets Manager, so the Google Cloud Build account will need secret accessor permissions.
+
 ## References
 
 More details on Sysdig blog article: https://sysdig.com/blog/securing-google-cloud-run/
