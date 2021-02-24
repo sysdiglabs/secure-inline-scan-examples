@@ -3,20 +3,20 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', '${_IMAGE_URL}:${_IMAGE_TAG}', '.']
 
-- name: gcr.io/cloud-builders/gcloud
-  entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=sysdig_token --format='get(payload.data)' | tr '_-' '/+' | base64 -d > decrypted-data.txt" ]
-
-- name: 'sysdiglabs/secure-inline-scan'
-  entrypoint: 'bash'
-  args: [ '-c', '/bin/inline_scan.sh analyze -k $(cat decrypted-data.txt) ${_IMAGE_URL}:${_IMAGE_TAG}' ]
+- name: 'quay.io/sysdig/secure-inline-scan:2'
+  args: [ '--storage-type=docker-daemon', '--storage-path=/var/run/docker.sock', '${_IMAGE_URL}:${_IMAGE_TAG}' ]
+  secretEnv: ['SYSDIG_API_TOKEN']
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '${_IMAGE_URL}:${_IMAGE_TAG}']
 
+availableSecrets:
+  secretManager:
+  - versionName: projects/PROJECT_ID/secrets/sysdig_token/versions/latest
+    env: 'SYSDIG_API_TOKEN'
+
 substitutions:
   _IMAGE_URL: 'gcr.io/project-name/image-name'
   _IMAGE_TAG: 'latest'
-
 
 timeout: 900s
