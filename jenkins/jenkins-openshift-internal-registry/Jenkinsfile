@@ -59,7 +59,7 @@ spec:
 
         stage('Prepare internal registry credentials') {
             steps {
-                # We need to convert old .dockercfg format to config.json wrapping in "auth" field
+                // We need to convert old .dockercfg format to config.json wrapping in "auth" field
                 sh "echo -n \"{ \\\"auths\\\": \"  > /home/jenkins/agent/config.json"
                 sh "cat /home/jenkins/agent/.dockercfg >> /home/jenkins/agent/config.json"
                 sh "echo \"}\" >>/home/jenkins/agent/config.json"
