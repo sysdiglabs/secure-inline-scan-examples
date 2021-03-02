@@ -100,7 +100,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sysdig-secrets
-              key: sysdig-secure-api-key
+              key: sysdig-secure-api-token
 
     - name: push
       image: quay.io/skopeo/stable
@@ -158,7 +158,7 @@ spec:
   type: image
   params:
   - name: url
-    value: docker.io/username/leeroy-web2a
+    value: docker.io/$DOCKER_USER/leeroy-web
 
 ---
 apiVersion: tekton.dev/v1alpha1

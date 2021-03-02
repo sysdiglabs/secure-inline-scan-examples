@@ -93,7 +93,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sysdig-secrets
-              key: sysdig-secure-api-key
+              key: sysdig-secure-api-token
 
 ---
 apiVersion: tekton.dev/v1alpha1
@@ -136,7 +136,7 @@ spec:
   type: image
   params:
     - name: url
-      value: docker.io/vicenteherrera/leeroy-web
+      value: docker.io/$DOCKER_USER/leeroy-web
 
 ---
 apiVersion: tekton.dev/v1alpha1
