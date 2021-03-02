@@ -131,10 +131,11 @@ The `no_proxy` variable can be used to define a list of hosts that don't use the
 In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/) you can find the following examples in alphabetical order:
 
 * [Google Cloud Build](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/google-cloud-build)
-* Jenkins
+* [Jenkins](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins)
   * [Scan from repository](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-scan-from-repo)
   * [Build and scan](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-build-and-scan)
   * [Build, push and scan from repository](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-build-push-scan-from-repo)
+  * [Build, push and scan using Openshift internal registry](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-openshift-internal-registry)
 * [Tekton](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton)
   * [Tekton alpha API](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton/alpha)
   * [Tekton beta API](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/tekton/beta)

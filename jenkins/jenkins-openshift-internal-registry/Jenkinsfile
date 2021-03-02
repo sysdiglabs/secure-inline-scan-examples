@@ -1,0 +1,100 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+    name: inline-scan-worker
+spec:
+    containers:
+      - name: jnlp
+        volumeMounts:
+        # Mount the Openshift SA dockercfg secret as .dockercfg
+        - mountPath: /home/jenkins/agent/.dockercfg
+          name: sa-dockercfg
+          subPath: .dockercfg
+      - name: maven
+        image: maven:3.6-jdk-11
+        command: ['cat']
+        tty: true
+      - name: builder
+        image: gcr.io/kaniko-project/executor:debug
+        command: ['cat']
+        tty: true
+        env:
+        - name: DOCKER_CONFIG
+          value: /home/jenkins/agent
+      - name: inline-scan
+        image: quay.io/sysdig/secure-inline-scan:2
+        command: ['cat']
+        tty: true
+    volumes:
+    - name: sa-dockercfg
+      secret:
+        defaultMode: 420
+        # Name of the secret in Kubernetes used by the Service Account
+        # Requires push and pull access to the internal registry.
+        # See https://docs.openshift.com/container-platform/4.6/registry/accessing-the-registry.html
+        secretName: jenkins-dockercfg-nr7sd
+"""
+       }
+   }
+
+    parameters {
+        string(name: 'IMAGE_NAME', defaultValue: 'image-registry.openshift-image-registry.svc.cluster.local:5000/default/test-maven-app', description: 'Name of the image to be built andscanned (e.g.: myrepo/dummy-app)')
+    }
+
+    environment {
+        SECURE_API_KEY = credentials('sysdig-secure-airadier')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/openshift/test-maven-app'
+            }
+        }
+
+        stage('Prepare internal registry credentials') {
+            steps {
+                // We need to convert old .dockercfg format to config.json wrapping in "auth" field
+                sh "echo -n \"{ \\\"auths\\\": \"  > /home/jenkins/agent/config.json"
+                sh "cat /home/jenkins/agent/.dockercfg >> /home/jenkins/agent/config.json"
+                sh "echo \"}\" >>/home/jenkins/agent/config.json"
+            }
+        }
+
+        stage('Build app') {
+            steps {
+                container("maven") {
+                    sh "mvn package"
+                }
+            }
+        }
+
+        stage('Build image and push') {
+            steps {
+                container("builder") {
+                    sh """cat > Dockerfile <<EOF
+FROM gcr.io/distroless/java:11
+COPY target/hello.jar /hello.jar
+CMD /hello.jar
+EOF
+                    """
+                    sh "/kaniko/executor --context . --destination ${IMAGE_NAME} --skip-tls-verify"
+                }
+            }
+        }
+
+        stage('Scanning Image pulled from repository') {
+            steps {
+                container("inline-scan") {
+                    sh "/sysdig-inline-scan.sh -k ${SECURE_API_KEY_PSW} --registry-skip-tls --registry-auth-file /home/jenkins/agent/config.json ${IMAGE_NAME}"
+                }
+            }
+        }
+
+   }
+}
