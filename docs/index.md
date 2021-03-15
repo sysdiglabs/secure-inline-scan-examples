@@ -158,9 +158,9 @@ These integrations have a specific entry in their respective CI/CD catalogs:
 
 Official documentation pages must be current to the features provided by the inline scanner, but their explanations may be brief:
 
-* [Registry Scanning](https://sysdig.com/products/kubernetes-security/image-scanning/) (main Sysdig web page)
+* [CI/CD and Registry Scanning with Runtime Vulnerability Reporting](https://sysdig.com/products/secure/image-scanning/) (main Sysdig web page)
 * [Image Scanning](https://docs.sysdig.com/en/image-scanning.html) (Sysdig Documentation website)
-* [Sysdig Secure inline scan repository](https://github.com/sysdiglabs/secure-inline-scan) (main project code repository's readme)
+* [Image Scanning - Integrate with CI/CD Tools](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html)
 
 ## Blog articles
 

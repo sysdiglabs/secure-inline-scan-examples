@@ -21,7 +21,7 @@ pipeline{
                         script {
                             sh "docker pull ${IMAGE_NAME}"
                         }
-                        
+
                     }
                 }
             }
