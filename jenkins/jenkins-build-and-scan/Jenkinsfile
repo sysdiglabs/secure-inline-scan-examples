@@ -2,12 +2,12 @@ pipeline {
     agent {
         kubernetes {
             yaml """
-apiVersion: v1 
-kind: Pod 
-metadata: 
+apiVersion: v1
+kind: Pod
+metadata:
     name: inline-scan-worker
-spec: 
-    containers: 
+spec:
+    containers:
       - name: jnlp
       - name: maven
         image: maven:3.6-jdk-11
@@ -25,14 +25,14 @@ spec:
        }
    }
 
-    parameters { 
-        string(name: 'IMAGE_NAME', defaultValue: 'docker.io/sysdiglabs/test-maven-app', description: 'Name of the image to be built andscanned (e.g.: myrepo/dummy-app)') 
+    parameters {
+        string(name: 'IMAGE_NAME', defaultValue: 'docker.io/sysdiglabs/test-maven-app', description: 'Name of the image to be built andscanned (e.g.: myrepo/dummy-app)')
     }
-    
+
     environment {
         SECURE_API_KEY = credentials('sysdig-secure-api-credentials')
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
