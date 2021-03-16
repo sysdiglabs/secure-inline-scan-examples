@@ -1,20 +1,20 @@
 # Sysdig Secure Inline Scan Examples
 
-This repository contains examples and information about **how to use** [Sysdig Secure inline scan](https://github.com/sysdiglabs/secure-inline-scan) in different integrations and use case scenarios.
+This repository contains examples and information about **how to use** [Sysdig Secure inline scan](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html) in different integrations and use case scenarios.
 
 Continue reading the public webpage content of this repository here:
 
 * [sysdiglabs.github.io/secure-inline-scan-examples](https://sysdiglabs.github.io/secure-inline-scan-examples)
 
-It is not a comprehensive catalog of _examples_ for all integrations available, but a live document where we continually publish more information as we see users need it. We do try to keep a list of links to all integrations and other related websites that you may find useful.
+It is not a comprehensive _example_ catalog for every available integration, but a live document where we continually publish more information as we see users need it. We try to keep a list of links to all integrations and other convenient and related websites.
 
 ## Issues and pull requests
 
-If you find a related topic lacks enough information, or some problem with any of the existing examples, please file a issue in this repository. Pull requests to amend any existing information or examples are also welcomed.
+If you find a related topic that lacks enough information or some problem with any of the existing examples, please file an issue in this repository. Pull requests to amend any existing information or examples are also welcome.
 
 ## More information
 
 * Sysdig.com
 * [Sysdig Documentation website - Image Scanning](https://docs.sysdig.com/en/image-scanning.html)
-* [Sysdig Secure inline scan repository](https://github.com/sysdiglabs/secure-inline-scan)
+* [Image Scanning - Integrate with CI/CD Tools](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html)
 
