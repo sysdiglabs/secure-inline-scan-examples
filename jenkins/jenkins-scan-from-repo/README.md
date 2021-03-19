@@ -1,6 +1,6 @@
 # Build, push and scan from Openshift internal registry
 
-This minimalistic e[example pipeline](Jenkinsfile) shows how to execute the inline-scan container as part of a podTemplate.
+This minimalistic [example pipeline](Jenkinsfile) shows how to execute the inline-scan container as part of a podTemplate.
 
 The podTemplate in the example is composed by 2 containers:
  * **jnlp** container. Required for the Jenkins agent.
