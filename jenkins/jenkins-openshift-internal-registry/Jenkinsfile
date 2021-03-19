@@ -9,26 +9,40 @@ metadata:
 spec:
     containers:
       - name: jnlp
+        workingDir: /tmp
         volumeMounts:
         # Mount the Openshift SA dockercfg secret as .dockercfg
-        - mountPath: /home/jenkins/agent/.dockercfg
+        - mountPath: /tmp/.dockercfg
           name: sa-dockercfg
           subPath: .dockercfg
       - name: maven
         image: maven:3.6-jdk-11
         command: ['cat']
         tty: true
+        workingDir: /tmp
       - name: builder
         image: gcr.io/kaniko-project/executor:debug
         command: ['cat']
         tty: true
+        workingDir: /tmp
         env:
         - name: DOCKER_CONFIG
-          value: /home/jenkins/agent
-      - name: inline-scan
+          value: /tmp
+      - name: inline-scan-option1-with-configjson
         image: quay.io/sysdig/secure-inline-scan:2
         command: ['cat']
         tty: true
+        workingDir: /tmp
+      - name: inline-scan-option2-with-dockercfg
+        image: quay.io/sysdig/secure-inline-scan:2
+        command: ['cat']
+        tty: true
+        workingDir: /tmp
+        volumeMounts:
+        # Mount the Openshift SA dockercfg secret as .dockercfg
+        - mountPath: /tmp/.dockercfg
+          name: sa-dockercfg
+          subPath: .dockercfg
     volumes:
     - name: sa-dockercfg
       secret:
@@ -36,7 +50,7 @@ spec:
         # Name of the secret in Kubernetes used by the Service Account
         # Requires push and pull access to the internal registry.
         # See https://docs.openshift.com/container-platform/4.6/registry/accessing-the-registry.html
-        secretName: jenkins-dockercfg-nr7sd
+        secretName: builder-dockercfg-r2gc4
 """
        }
    }
@@ -46,7 +60,7 @@ spec:
     }
 
     environment {
-        SECURE_API_KEY = credentials('sysdig-secure-airadier')
+        SECURE_API_KEY = credentials('sysdig-secure')
     }
 
     stages {
@@ -59,10 +73,10 @@ spec:
 
         stage('Prepare internal registry credentials') {
             steps {
-                // We need to convert old .dockercfg format to config.json wrapping in "auth" field
-                sh "echo -n \"{ \\\"auths\\\": \"  > /home/jenkins/agent/config.json"
-                sh "cat /home/jenkins/agent/.dockercfg >> /home/jenkins/agent/config.json"
-                sh "echo \"}\" >>/home/jenkins/agent/config.json"
+                // We need to convert old .dockercfg format to config.json wrapping in "auth" field for Kaniko
+                sh "echo -n \"{ \\\"auths\\\": \"  > /tmp/config.json"
+                sh "cat /tmp/.dockercfg >> /tmp/config.json"
+                sh "echo \"}\" >>/tmp/config.json"
             }
         }
 
@@ -88,13 +102,25 @@ EOF
             }
         }
 
-        stage('Scanning Image pulled from repository') {
+        stage('Option 1: Scanning Image pulled from repository using config.json format') {
             steps {
-                container("inline-scan") {
-                    sh "/sysdig-inline-scan.sh -k ${SECURE_API_KEY_PSW} --registry-skip-tls --registry-auth-file /home/jenkins/agent/config.json ${IMAGE_NAME}"
+                container("inline-scan-option1-with-configjson") {
+                    sh "id"
+                    sh "/sysdig-inline-scan.sh -k ${SECURE_API_KEY_PSW} --registry-skip-tls --registry-auth-file /tmp/config.json ${IMAGE_NAME}"
                 }
             }
         }
 
+        stage('Option 2: Scanning Image pulled from repository using .dockercfg format') {
+            steps {
+                container("inline-scan-option2-with-dockercfg") {
+                    sh "id"
+                    // Instead of using --registry-auth-file, we can just provide the .dockercfg file at /tmp/sysdyg-inline-scan/home/.dockercfg
+                    sh "mkdir -p /tmp/sysdig-inline-scan/home"
+                    sh "cp /tmp/.dockercfg /tmp/sysdig-inline-scan/home"
+                    sh "/sysdig-inline-scan.sh -k ${SECURE_API_KEY_PSW} --registry-skip-tls ${IMAGE_NAME}"
+                }
+            }
+        }
    }
 }
