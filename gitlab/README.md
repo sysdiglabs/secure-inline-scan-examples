@@ -1,6 +1,6 @@
 # GitLab CI Demo - No DinD
 
-![Gitlab job](/gitlab.png)
+![Gitlab job](gitlab.png)
 
 In this demo we will use GitLab pipelines without requiring privileged containers, or docker in docker.
 We will need to split this pipeline into three different jobs
