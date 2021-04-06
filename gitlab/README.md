@@ -2,7 +2,7 @@
 
 ![Gitlab job](/gitlab.png)
 
-In this demo we will use GitLab pipeleins without requiring privileged containers, or docker in docker.
+In this demo we will use GitLab pipelines without requiring privileged containers, or docker in docker.
 We will need to split this pipeline into three different jobs
 1. Kaniko: Tool used to build docker image
 2. Sysdig-inline-scan: Scan docker images for vulnerabilities
