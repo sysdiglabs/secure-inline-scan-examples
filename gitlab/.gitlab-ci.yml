@@ -1,7 +1,7 @@
 variables:
   SYSDIG_SECURE_ENDPOINT: "https://secure.sysdig.com"
   CI_REGISTRY_HOST: "docker.io"
-  CI_REGISTRY_NAME: "my-u"
+  CI_REGISTRY_NAME: "my-registry"
   CI_IMAGE_NAME: "my-image"
   CI_IMAGE_TAG: "my-tag"
 
