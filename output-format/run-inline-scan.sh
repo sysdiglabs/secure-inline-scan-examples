@@ -30,23 +30,19 @@ fi
 
 echo "Scan finished. Generating reports"
 
-
-# Extract vuln report from the output to vulns.json
-jq -r '.vulnsReport' output.json > vulns.json
-
 # Create CSV report using mustache
-cat <<EOF | docker run -v $(pwd)/vulns.json:/vulns.json --rm -i toolbelt/mustache /vulns.json - > vulns.csv
+cat <<EOF | docker run -v $(pwd)/output.json:/output.json --rm -i toolbelt/mustache /output.json - > vulns.csv
 sep=;
-Vuln;Severity;Package;Package_Type;Fix;Url\n" 
-{{#vulnerabilities}}
+Vuln;Severity;Package;Package_Type;Fix;Url
+{{#vulnsReport.vulnerabilities}}
 {{vuln}};{{severity}};{{package}};{{package_type}};{{fix}};{{url}}
-{{/vulnerabilities}}
+{{/vulnsReport.vulnerabilities}}
 EOF
 
 echo "vulns.csv generated"
 
 # Create HTML report using mustache
-cat <<EOF | docker run -v $(pwd)/vulns.json:/vulns.json --rm -i toolbelt/mustache /vulns.json - > vulns.html
+cat <<EOF | docker run -v $(pwd)/output.json:/output.json --rm -i toolbelt/mustache /output.json - > vulns.html
 <html>
 <head>
     <title>Vuln report</title>
@@ -76,7 +72,7 @@ cat <<EOF | docker run -v $(pwd)/vulns.json:/vulns.json --rm -i toolbelt/mustach
             </tr>
         </thead>
         <tbody>
-            {{#vulnerabilities}}
+{{#vulnsReport.vulnerabilities}}
             <tr>
                 <td>{{vuln}}</td>
                 <td>{{severity}}</td>
@@ -85,7 +81,7 @@ cat <<EOF | docker run -v $(pwd)/vulns.json:/vulns.json --rm -i toolbelt/mustach
                 <td>{{fix}}</td>
                 <td><a href="{{url}}">{{url}}</a></td>
             </tr>
-            {{/vulnerabilities}}
+{{/vulnsReport.vulnerabilities}}
         </tbody>
     </table>
 </body>
