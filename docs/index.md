@@ -160,7 +160,7 @@ These integrations have a specific entry in their respective CI/CD catalogs:
 Official documentation pages must be current to the features provided by the inline scanner, but their explanations may be brief:
 
 * [CI/CD and Registry Scanning with Runtime Vulnerability Reporting](https://sysdig.com/products/secure/image-scanning/) (main Sysdig web page)
-* [Image Scanning](https://docs.sysdig.com/en/image-scanning.html) (Sysdig Documentation website)
+* [Image Scanning](https://docs.sysdig.com/en/scanning.html) (Sysdig Documentation website)
 * [Image Scanning - Integrate with CI/CD Tools](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html)
 
 ## Blog articles
