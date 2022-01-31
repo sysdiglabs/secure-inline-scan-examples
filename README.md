@@ -14,7 +14,7 @@ If you find a related topic that lacks enough information or some problem with a
 
 ## More information
 
-* Sysdig.com
+* [Sysdig.com](https://sysdig.com)
 * [Sysdig Documentation website - Image Scanning](https://docs.sysdig.com/en/scanning.html)
 * [Image Scanning - Integrate with CI/CD Tools](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html)
 
