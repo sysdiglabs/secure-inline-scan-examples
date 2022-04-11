@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Scan image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'sysdig-secure-api-credentials', passwordVariable: 'SECURE_API_TOKEN', usernameVariable: '')]) {
+                    sh '''
+                        VERSION=$(curl -L -s https://download.sysdig.com/scanning/inlinescan/latest_version.txt)
+                        curl -LO "https://download.sysdig.com/scanning/inlinescan/inlinescan_${VERSION}_linux_amd64"
+                        chmod +x ./inlinescan_${VERSION}_linux_amd64
+                        ./inlinescan_${VERSION}_linux_amd64 --apiurl https://secure.sysdig.com mongo-express:0.54.0
+                    '''
+                }
+            }
+        }
+    }
+}
