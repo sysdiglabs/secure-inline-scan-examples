@@ -29,7 +29,7 @@ image:scan:
     entrypoint: [""]
   script:
     - mkdir reports
-    - /sysdig-inline-scan.sh --sysdig-token $SYSDIG_SECURE_TOKEN --storage-type oci-dir --storage-path $(pwd)/build/ $CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG --report-folder reports
+    - /sysdig-inline-scan.sh --sysdig-token $SYSDIG_SECURE_TOKEN  --sysdig-url $SYSDIG_SECURE_ENDPOINT --storage-type oci-dir --storage-path $(pwd)/build/ $CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG --report-folder reports
   artifacts:
     paths:
       - reports
