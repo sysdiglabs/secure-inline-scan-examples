@@ -6,10 +6,10 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'sysdig-secure-api-credentials', passwordVariable: 'SECURE_API_TOKEN', usernameVariable: '')]) {
                     sh '''
-                        VERSION=$(curl -L -s https://download.sysdig.com/scanning/inlinescan/latest_version.txt)
-                        curl -LO "https://download.sysdig.com/scanning/inlinescan/inlinescan_${VERSION}_linux_amd64"
-                        chmod +x ./inlinescan_${VERSION}_linux_amd64
-                        ./inlinescan_${VERSION}_linux_amd64 --apiurl https://secure.sysdig.com mongo-express:0.54.0
+                        VERSION=$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)
+                        curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/${VERSION}/linux/amd64/sysdig-cli-scanner"
+                        chmod +x ./sysdig-cli-scanner
+                        ./sysdig-cli-scanner --apiurl https://secure.sysdig.com mongo-express:0.54.0
                     '''
                 }
             }
