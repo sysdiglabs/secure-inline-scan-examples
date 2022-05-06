@@ -1,0 +1,3 @@
+# AWS CodeBuild Image Build and Scan example
+
+The example shows how you can use [AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/getting-started-overview.html) to build a Docker image, then scan the image for vulnerabilities using the new Sysdig Scan Engine CLI. The build will fail if the policy evaluation fails. You can specify the `SECURE_API_TOKEN` and `SYSDIG_API_ENDPOINT` in the buildspec, however best practice would be to externalize the values in an external store as explained [here](https://docs.aws.amazon.com/codebuild/latest/userguide/create-project-console.html#create-project-console-environment).
