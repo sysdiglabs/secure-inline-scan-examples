@@ -1,0 +1,34 @@
+# AWS CodeBuild example with New Sysdig Scan Engine
+# Scans image for vulnerabilities; If policy evaluation fails, then build fails
+# Must configure required 
+version: 0.2
+
+env:
+  variables:
+    # Customers should configure this variable using paramater-store or secrets-manager
+    SECURE_API_TOKEN: <your API token>
+    SYSDIG_API_ENDPOINT: <Sysdig API endpoint for your region>
+
+phases:
+  install:
+    commands:
+      # Download most recent version of Sysdig CLI Scanner
+      - curl -LO https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner
+      - chmod +x ./sysdig-cli-scanner
+  pre_build:
+    commands:
+      # Build a simple NGINX image with an index file added
+      - curl -LO https://raw.githubusercontent.com/nginxinc/NGINX-Demos/master/nginx-hello/index.html
+      - |
+        cat > Dockerfile << EOF
+        FROM public.ecr.aws/nginx/nginx
+        COPY index.html /usr/share/nginx/html
+        EOF
+
+  build:
+    commands:
+      - docker build -t nginx-hello:hello1 .
+  post_build:
+    commands:
+      - pwd
+      - ./sysdig-cli-scanner --apiurl $SYSDIG_API_ENDPOINT nginx-hello:hello1
