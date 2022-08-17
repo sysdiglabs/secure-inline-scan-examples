@@ -1,8 +1,8 @@
 # GitLab CI Demo - No DinD
 
-![Gitlab job](gitlab.png)
+> :warning: **Outdated example**: This example is using the legacy scan engine. Please use the [latest example for the new scan engine](../new-scan-engine/README.md) instead.
 
-> :warning: **Outdated example**: This example is using the legacy scan engine. Please use the new scan engine instead.
+![Gitlab job](gitlab.png)
 
 In this demo we will use GitLab pipelines without requiring privileged containers, or docker in docker.
 We will need to split this pipeline into three different jobs
@@ -42,7 +42,7 @@ The build stage is using Kaniko. We use a method to build the container to an oc
 We then save the `build/` directory as an artifact.
 
 ### Scan
-The scan stage is using `sysdig-inline-scan:2` (deprecated). This stage uses a newer Sysdig scanning method without the docker daemon dependencies.
+The scan stage is using `sysdig-inline-scan:2` (deprecated). This stage uses a scanning method without the docker daemon dependencies ([Documentation](https://docs.sysdig.com/en/docs/sysdig-secure/scanning/integrate-with-cicd-tools/)).
 We then save the `build/` directory as an artifact for the next step as well as the `report/` directory to review the PDF scan results later.
 
 ### Push

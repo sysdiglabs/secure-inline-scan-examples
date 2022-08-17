@@ -1,11 +1,9 @@
 # GitLab CI Demo - No DinD
 
-![Gitlab job](gitlab.png)
-
 In this demo we will use GitLab pipelines without requiring privileged containers, or docker in docker.
 We will need to split this pipeline into three different jobs
 1. Kaniko: Tool used to build docker image
-2. Sysdig-inline-scan: Scan docker images for vulnerabilities
+2. Sysdig-cli-scanner: Scan docker images for vulnerabilities using the new scan engine developed by Sysding in 2022
 3. Crane: Push container image to a remote registry
 
 ## Setup
@@ -40,7 +38,7 @@ The build stage is using Kaniko. We use a method to build the container to an oc
 We then save the `build/` directory as an artifact.
 
 ### Scan
-The scan stage is using `sysdig-inline-scan:2`. This stage uses a newer Sysdig scanning method without the docker daemon dependencies.
+The scan stage is using `sysdig-cli-scanner`. This stage uses a the latest Sysdig scanning method documented here [Sysdig Secure - Vulnerabilities](https://docs.sysdig.com/en/docs/sysdig-secure/vulnerabilities/pipeline/)
 We then save the `build/` directory as an artifact for the next step as well as the `report/` directory to review the PDF scan results later.
 
 ### Push
