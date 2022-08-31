@@ -1,0 +1,53 @@
+variables:
+  SYSDIG_SECURE_ENDPOINT: "https://us2.app.sysdig.com"
+  CI_REGISTRY_HOST: "docker.io"
+  CI_REGISTRY_NAME: "my-registry"
+  CI_IMAGE_NAME: "my-image"
+  CI_IMAGE_TAG: "my-tag"
+
+stages:
+  - build
+  - scan
+  - push
+
+image:build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor --dockerfile Dockerfile --destination $CI_REGISTRY_HOST/$CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG --no-push --oci-layout-path $(pwd)/build/ --tarPath $(pwd)/build/$CI_IMAGE_TAG.tar
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 days
+
+image:scan:
+  stage: scan
+  before_script:
+    - export SECURE_API_TOKEN=$SYSDIG_SECURE_TOKEN
+  script:
+    - mkdir reports
+    - curl -LO https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner
+    - chmod +x ./sysdig-cli-scanner
+    - ./sysdig-cli-scanner --console-log  --apiurl $SYSDIG_SECURE_ENDPOINT file://$(pwd)/build/$CI_IMAGE_TAG.tar
+  artifacts:
+    paths:
+      - reports
+      - build/
+    expire_in: 1 days
+    when: always
+  needs:
+    - image:build
+
+image:push:
+  stage: push
+  image:
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [""]
+  script:
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_HOST
+    - crane push build/$CI_IMAGE_TAG.tar $CI_REGISTRY_HOST/$CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG
+  needs:
+    - image:scan
+
