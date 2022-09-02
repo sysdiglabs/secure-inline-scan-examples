@@ -130,6 +130,8 @@ The `no_proxy` variable can be used to define a list of hosts that don't use the
 
 In this [repository](https://github.com/sysdiglabs/secure-inline-scan-examples/) you can find the following examples in alphabetical order:
 
+* [AWS Codebuild](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/new-scan-engine/aws-codebuild)
+* [Azure Pipelines](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/azure-pipelines)
 * [Google Cloud Build](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/google-cloud-build)
 * [Jenkins](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins)
   * [Scan from repository](https://github.com/sysdiglabs/secure-inline-scan-examples/tree/main/jenkins/jenkins-scan-from-repo)
