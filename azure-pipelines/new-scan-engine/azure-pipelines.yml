@@ -1,0 +1,86 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  CACHE_FOLDER: $(Pipeline.Workspace)/cache/
+  SYSDIG_SECURE_ENDPOINT: "https://eu1.app.sysdig.com"
+  REGISTRY_HOST: "quay.io"
+  IMAGE_NAME: "e_minguez/my-example-app"
+  IMAGE_TAG: "latest"
+  REGISTRY_CONNECTION: "quayio-e_minguez"
+
+steps:
+
+- task: Cache@2
+  inputs:
+    key: |
+      sysdig-cli-scanner-cache | "$(Agent.OS)" | "$(CACHE_FOLDER)/sysdig-cli-scanner" | "$(CACHE_FOLDER)/latest_version.txt" | "$(CACHE_FOLDER)/db/main.db.meta.json" | "$(CACHE_FOLDER)/scanner-cache/inlineScannerCache.db"
+    restoreKeys: |
+      sysdig-cli-scanner-cache | "$(Agent.OS)"
+      sysdig-cli-scanner-cache
+    path: $(CACHE_FOLDER)
+  displayName: Cache sysdig-cli-scanner and databases
+
+- task: Cache@2
+  displayName: Docker cache
+  inputs:
+    key: 'docker | "$(Agent.OS)" | cache'
+    path: $(Pipeline.Workspace)/docker
+    cacheHitVar: CACHE_RESTORED
+
+- script: |
+    docker load -i $(Pipeline.Workspace)/docker/cache.tar
+  displayName: Docker restore
+  condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+
+- task: Docker@2
+  inputs:
+    command: 'build'
+    Dockerfile: 'love/Containerfile'
+    buildContext: 'love/'
+    repository: $(REGISTRY_HOST)/$(IMAGE_NAME)
+    tags: $(IMAGE_TAG)
+    addPipelineData: false
+    addBaseImageData: false
+
+- script: |
+    curl -sLO https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt
+    mkdir -p $(CACHE_FOLDER)/db/
+    if [ ! -f $(CACHE_FOLDER)/latest_version.txt ] || [ $(cat ./latest_version.txt) != $(cat $(CACHE_FOLDER)/latest_version.txt) ]; then
+      cp ./latest_version.txt $(CACHE_FOLDER)/latest_version.txt
+      curl -sL -o $(CACHE_FOLDER)/sysdig-cli-scanner "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(cat $(CACHE_FOLDER)/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
+      chmod +x $(CACHE_FOLDER)/sysdig-cli-scanner
+    else
+      echo "sysdig-cli-scanner latest version already downloaded"
+    fi
+  displayName: Download the sysdig-cli-scanner if needed
+
+- script: |
+    $(CACHE_FOLDER)/sysdig-cli-scanner \
+      --apiurl $(SYSDIG_SECURE_ENDPOINT) \
+      --console-log \
+      --dbpath=$(CACHE_FOLDER)/db/ \
+      --cachepath=$(CACHE_FOLDER)/scanner-cache/ \
+      docker://$(REGISTRY_HOST)/$(IMAGE_NAME):$(IMAGE_TAG) \
+  displayName: Run the sysdig-cli-scanner
+  env:
+    SECURE_API_TOKEN: $(TOKEN)
+
+- task: Docker@2
+  displayName: Push the container image
+  inputs:
+    containerRegistry: $(REGISTRY_CONNECTION)
+    repository: $(IMAGE_NAME)
+    command: push
+    tags: $(IMAGE_TAG)
+    addPipelineData: false
+    addBaseImageData: false
+
+- script: |
+    mkdir -p $(Pipeline.Workspace)/docker
+    docker save $(docker images -q) -o $(Pipeline.Workspace)/docker/cache.tar
+  displayName: Docker save
+  condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
