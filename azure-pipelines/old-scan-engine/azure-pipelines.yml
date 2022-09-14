@@ -1,0 +1,35 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  containerRegistryConnection: containerRegistry
+  imageName: 'sysdiglabs/dummy-vuln-app'
+  tags: |
+    latest
+
+steps:
+- task: Docker@2
+  displayName: Build image
+  inputs:
+    repository: $(imageName)
+    command: build
+    tags: $(tags)
+
+- bash: docker run --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    quay.io/sysdig/secure-inline-scan:2 \
+    --sysdig-token $(secureApiKey) \
+    --storage-type docker-daemon \
+    --storage-path /var/run/docker.sock \
+    $(imageName):latest
+
+- task: Docker@2
+  inputs:
+    command: 'login'
+    containerRegistry: $(containerRegistryConnection)
+
+- task: Docker@2
+  inputs:
+    command: 'push'
+    tags: $(tags)
+    containerRegistry: $(containerRegistryConnection)
