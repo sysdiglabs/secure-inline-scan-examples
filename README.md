@@ -1,6 +1,21 @@
-# Sysdig Secure Inline Scan Examples
+<div align="center">
 
-This repository contains examples and information about **how to use** [Sysdig Secure inline scan](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html) in different integrations and use case scenarios.
+# Sysdig Vulnerability Scan Examples
+
+<p align="center">
+  <img alt="Sysdig Logo" src="https://avatars.githubusercontent.com/u/5068817" height="140" />
+  <h3 align="center">Sysdig Vulnerability Scan Examples</h3>
+</p>
+
+| :warning: **As of April 20, 2022, Sysdig offers both a Legacy Scanner engine and the newer Vulnerability Management engine. See the [official documentation](https://docs.sysdig.com/en/docs/sysdig-secure/scanning/new-scanning-engine/#which-engine-is-enabled-now) to understand which engine is enabled into your account.** |
+| --- |
+
+</div>
+
+This repository contains examples and information about using in different integrations and use case scenarios both the:
+
+* [Sysdig Secure inline scan](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html) - Refered as `old-scan-engine`
+* [Sysdig Pipeline Vulnerability Management engine](https://docs.sysdig.com/en/docs/sysdig-secure/vulnerabilities/pipeline/) - Refered as `new-scan-engine`
 
 Continue reading the public webpage content of this repository here:
 
@@ -15,6 +30,6 @@ If you find a related topic that lacks enough information or some problem with a
 ## More information
 
 * [Sysdig.com](https://sysdig.com)
-* [Sysdig Documentation website - Image Scanning](https://docs.sysdig.com/en/scanning.html)
-* [Image Scanning - Integrate with CI/CD Tools](https://docs.sysdig.com/en/integrate-with-ci-cd-tools.html)
-
+* [Running the CLI scanner](https://docs.sysdig.com/en/docs/sysdig-secure/vulnerabilities/pipeline/#running-the-cli-scanner)
+* [Legacy Scanning engine](https://docs.sysdig.com/en/docs/sysdig-secure/scanning/)
+* [Legacy Scanning engine - Integrate with CI/CD Tools](https://docs.sysdig.com/en/docs/sysdig-secure/scanning/integrate-with-cicd-tools/)

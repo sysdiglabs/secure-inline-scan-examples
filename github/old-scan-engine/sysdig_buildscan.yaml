@@ -1,0 +1,33 @@
+ame: Sysdig - Build, scan and push Docker Image
+
+on: [push, repository_dispatch]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
+
+    - name: Sysdig Secure Inline Scan
+      id: scan
+      uses: sysdiglabs/scan-action@v3
+      with:
+        # Tag of the image to analyse
+        image-tag: "sysdiglabs/dummy-vuln-app:latest"
+        # API token for Sysdig Scanning auth
+        sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN }}
+        dockerfile-path: ./Dockerfile
+        input-type: docker-daemon
+        run-as-user: root
+        ignore-failed-scan: true
+
+    - uses: github/codeql-action/upload-sarif@v1
+      if: always()
+      with:
+        sarif_file: ${{ steps.scan.outputs.sarifReport }}
