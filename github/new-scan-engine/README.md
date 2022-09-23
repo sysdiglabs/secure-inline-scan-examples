@@ -29,5 +29,5 @@ SYSDIG_SECURE_ENDPOINT: "https://secure.sysdig.com"
 REGISTRY_HOST: "quay.io"
 IMAGE_NAME: "mytestimage"
 IMAGE_TAG: "my-tag"
-DOCKERFILE_CONTEXT: "github/"
+DOCKERFILE_CONTEXT: "github/new-scan-engine/"
 ```
