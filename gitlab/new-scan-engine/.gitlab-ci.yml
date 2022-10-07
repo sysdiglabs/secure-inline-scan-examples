@@ -1,8 +1,5 @@
 variables:
-  SYSDIG_SECURE_ENDPOINT: "https://us2.app.sysdig.com"
-  CI_REGISTRY_HOST: "docker.io"
-  CI_REGISTRY_NAME: "my-registry"
-  CI_IMAGE_NAME: "my-image"
+  SYSDIG_SECURE_ENDPOINT: "https://eu1.app.sysdig.com"
   CI_IMAGE_TAG: "my-tag"
 
 stages:
@@ -16,7 +13,7 @@ image:build:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   script:
-    - /kaniko/executor --dockerfile Dockerfile --destination $CI_REGISTRY_HOST/$CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG --no-push --oci-layout-path $(pwd)/build/ --tarPath $(pwd)/build/$CI_IMAGE_TAG.tar
+    - /kaniko/executor --dockerfile Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_IMAGE_TAG --no-push --oci-layout-path $(pwd)/build/ --tarPath $(pwd)/build/$CI_IMAGE_TAG.tar
   artifacts:
     paths:
       - build/
@@ -46,8 +43,7 @@ image:push:
     name: gcr.io/go-containerregistry/crane:debug
     entrypoint: [""]
   script:
-    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_HOST
-    - crane push build/$CI_IMAGE_TAG.tar $CI_REGISTRY_HOST/$CI_REGISTRY_NAME/$CI_IMAGE_NAME:$CI_IMAGE_TAG
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - crane push build/$CI_IMAGE_TAG.tar $CI_REGISTRY_IMAGE:$CI_IMAGE_TAG
   needs:
     - image:scan
-
