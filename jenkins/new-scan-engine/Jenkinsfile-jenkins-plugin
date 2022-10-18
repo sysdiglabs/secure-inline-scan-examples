@@ -1,0 +1,17 @@
+stages {
+    stage('Checkout') {
+        steps {
+            checkout scm
+        }
+    }
+    stage('Build Image') {
+        steps {
+            sh "docker build -f Dockerfile -t ${params.DOCKER_REPOSITORY} ."
+        }
+    }
+    stage('Scanning Image') {
+        steps {
+            sysdigImageScan engineCredentialsId: 'sysdig-secure-api-credentials', imageName: "${params.DOCKER_REPOSITORY}"
+        }
+    }
+}
