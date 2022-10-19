@@ -1,17 +1,38 @@
-stages {
-    stage('Checkout') {
-        steps {
-            checkout scm
-        }
+pipeline {
+  environment {
+    image = "docker.io/myawesomecompany/myawesomeimage" + ":$BUILD_NUMBER"
+    registryCredential = "registry-credentials"
+    repository = 'https://github.com/sysdiglabs/secure-inline-scan-examples.git'
+    myimage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git branch: 'main', url: repository
+      }
     }
-    stage('Build Image') {
-        steps {
-            sh "docker build -f Dockerfile -t ${params.DOCKER_REPOSITORY} ."
+    stage('Building image') {
+      steps{
+        script {
+          myimage = docker.build(image, "./jenkins/new-scan-engine/")
         }
+      }
     }
     stage('Scanning Image') {
         steps {
-            sysdigImageScan engineCredentialsId: 'sysdig-secure-api-credentials', imageName: "${params.DOCKER_REPOSITORY}"
+            sysdigImageScan engineCredentialsId: 'sysdig-secure-api-token', imageName: "docker://" + image, engineURL: 'https://eu1.app.sysdig.com'
         }
     }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry('', registryCredential) {
+            myimage.push()
+            myimage.push('latest')
+          }
+        }
+      }
+    }
+  }
 }
