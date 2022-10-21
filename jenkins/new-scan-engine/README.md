@@ -9,11 +9,11 @@ There are two different approaches if using Jenkins to scan container images for
 
 This [example pipeline](Jenkinsfile-sysdig-cli-scanner) shows how to download and execute the new inline scanner to scan an image.
 
-It requires to configure a Jenkins credential `sysdig-secure-api-credentials` to store the Sysdig Token (as password)
+It requires to configure a Jenkins credential `sysdig-secure-api-token` to store the Sysdig Token (as password)
 
 ![Screenshot of Jenkins UI](https://github.com/jenkinsci/sysdig-secure-plugin/raw/main/docs/images/SysdigTokenConfiguration.png)
 
-Then the scan is performed by downloading the `sysdig-cli-scanner` tool against the `mongo-express:0.54.0` example image.
+Then the scan is performed by downloading the `sysdig-cli-scanner` tool against the example image.
 
 For a more elaborated example, see the [GitHub](../../github/new-scan-engine/README.md) example.
 
@@ -29,5 +29,6 @@ The [example pipeline](Jenkinsfile-jenkins-plugin) shows how to use it to build 
 
 Both approaches require a couple of things:
 
-* A valid Sysdig Secure API token
+* A valid Sysdig Secure API token.
 * Have access to the image storage, either to the local storage where the image was created or to the registry where it is stored.
+* The appropriate Sysdig vulnerability scanning endpoint depending on your region, see [the official documentation](https://docs.sysdig.com/en/docs/administration/saas-regions-and-ip-ranges).

@@ -3,6 +3,7 @@ pipeline {
     image = "docker.io/myawesomecompany/myawesomeimage" + ":$BUILD_NUMBER"
     registryCredential = "registry-credentials"
     repository = 'https://github.com/sysdiglabs/secure-inline-scan-examples.git'
+    api_endpoint = 'https://eu1.app.sysdig.com'
     myimage = ''
   }
   agent any
@@ -21,7 +22,7 @@ pipeline {
     }
     stage('Scanning Image') {
         steps {
-            sysdigImageScan engineCredentialsId: 'sysdig-secure-api-token', imageName: "docker://" + image, engineURL: 'https://eu1.app.sysdig.com'
+            sysdigImageScan engineCredentialsId: 'sysdig-secure-api-token', imageName: "docker://" + image, engineURL: api_endpoint
         }
     }
     stage('Deploy Image') {
