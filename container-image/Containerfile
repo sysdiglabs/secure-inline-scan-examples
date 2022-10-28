@@ -1,0 +1,10 @@
+FROM alpine:latest as builder
+ARG VERSION
+ENV VERSION=${VERSION}
+ADD https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/${VERSION}/linux/amd64/sysdig-cli-scanner /
+RUN chmod a+x /sysdig-cli-scanner
+
+FROM gcr.io/distroless/static-debian11:nonroot
+COPY --from=builder /sysdig-cli-scanner /home/nonroot/
+USER 65532:65532
+ENTRYPOINT ["/home/nonroot/sysdig-cli-scanner"]
