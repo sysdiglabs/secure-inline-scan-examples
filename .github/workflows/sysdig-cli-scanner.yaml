@@ -22,7 +22,6 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
-        exit 0
         LATEST_VERSION=$(curl -sL https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)
         echo "IMAGE_TAG=${LATEST_VERSION}" >> ${GITHUB_ENV}
         exit 0
