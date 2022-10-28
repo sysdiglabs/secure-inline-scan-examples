@@ -1,0 +1,96 @@
+env:
+    SYSDIG_SECURE_ENDPOINT: "https://secure.sysdig.com"
+    REGISTRY_HOST: "ghcr.io"
+    IMAGE_NAME: "sysdig-cli-scanner"
+    DOCKERFILE_CONTEXT: "container-image/"
+  
+name: Build, scan and push the sysdig-cli-scanner container
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * *"
+
+jobs:
+  build-scan-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+    - name: Check the latest version
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run:  |
+        LATEST_VERSION=$(curl -sL https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)
+        IMAGE_TAG=$(gh api -H "Accept: application/vnd.github+json" /orgs/sysdiglabs/packages/container/sysdig-cli-scanner/versions | jq -r 'sort_by(.created_at) | last | .metadata.container.tags[0]')
+        if [ ! -f ${GITHUB_WORKSPACE}/cache/latest_version.txt ] || [ ${LATEST_VERSION} != ${IMAGE_TAG} ]; then
+          echo "Container versions differ, building ${LATEST_VERSION}"
+          echo "IMAGE_TAG=${LATEST_VERSION}" >> ${GITHUB_ENV}
+        else
+          echo "Container already using latest version"
+          exit 1
+        fi
+    
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build and save
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ env.DOCKERFILE_CONTEXT }}
+        file: "${{ env.DOCKERFILE_CONTEXT }}Containerfile"
+        tags: ${{ env.REGISTRY_HOST }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        load: true
+        build-args: |
+          VERSION=${{ env.IMAGE_TAG }}
+    
+    - name: Setup cache
+      uses: actions/cache@v3
+      with:
+        path: cache
+        key: ${{ runner.os }}-cache-${{ hashFiles('**/sysdig-cli-scanner', '**/latest_version.txt', '**/db/main.db.meta.json', '**/scanner-cache/inlineScannerCache.db') }}
+        restore-keys: ${{ runner.os }}-cache-
+
+    - name: Download sysdig-cli-scanner if needed
+      run:  |
+        curl -sLO https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt
+        mkdir -p ${GITHUB_WORKSPACE}/cache/db/
+        if [ ! -f ${GITHUB_WORKSPACE}/cache/latest_version.txt ] || [ $(cat ./latest_version.txt) != $(cat ${GITHUB_WORKSPACE}/cache/latest_version.txt) ]; then
+          cp ./latest_version.txt ${GITHUB_WORKSPACE}/cache/latest_version.txt
+          curl -sL -o ${GITHUB_WORKSPACE}/cache/sysdig-cli-scanner "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(cat ${GITHUB_WORKSPACE}/cache/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
+          chmod +x ${GITHUB_WORKSPACE}/cache/sysdig-cli-scanner
+        else
+          echo "sysdig-cli-scanner latest version already downloaded"
+        fi
+
+    - name: Scan the image using sysdig-cli-scanner
+      env:
+        SECURE_API_TOKEN: ${{ secrets.SECURE_API_TOKEN }}
+      run: |
+        ${GITHUB_WORKSPACE}/cache/sysdig-cli-scanner \
+          --apiurl ${SYSDIG_SECURE_ENDPOINT} \
+          docker://${REGISTRY_HOST}/${{github.repository_owner}}/${IMAGE_NAME}:${IMAGE_TAG} \
+          --console-log \
+          --dbpath=${GITHUB_WORKSPACE}/cache/db/ \
+          --cachepath=${GITHUB_WORKSPACE}/cache/scanner-cache/
+
+    -  name: Login to the registry
+       uses: docker/login-action@v2
+       with:
+        registry: ${{ env.REGISTRY_HOST }}
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ env.DOCKERFILE_CONTEXT }}
+        push: true
+        file: "${{ env.DOCKERFILE_CONTEXT }}Containerfile"
+        build-args: |
+          VERSION=${{ env.IMAGE_TAG }}
+        tags: ${{ env.REGISTRY_HOST }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
