@@ -22,6 +22,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
+        exit 0
         LATEST_VERSION=$(curl -sL https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)
         IMAGE_TAG=$(gh api -H "Accept: application/vnd.github+json" /orgs/sysdiglabs/packages/container/sysdig-cli-scanner/versions | jq -r 'sort_by(.created_at) | last | .metadata.container.tags[0]')
         if [ ! -f ${GITHUB_WORKSPACE}/cache/latest_version.txt ] || [ ${LATEST_VERSION} != ${IMAGE_TAG} ]; then
