@@ -285,15 +285,15 @@ Blog articles contain detailed step by step information, but may be out of date 
 * [Automate Fargate image scanning](https://sysdig.com/blog/fargate-image-scanning/) <nobr>📅 2020-09-29</nobr>
 * [Automate registry scanning with Harbor & Sysdig](https://sysdig.com/blog/harbor-registry-scanning/) <nobr>📅 2020-08-11</nobr>
 * [12 Container image scanning best practices to adopt in production](https://sysdig.com/blog/image-scanning-best-practices/) <nobr>📅 2020-07-21</nobr>
-* [Performing Image Scanning on Admission Controller with OPA](https://sysdig.com/blog/image-scanning-admission-controller/) <nobr>📅 2020-04-16</nobr>
+* [Shielding your Kubernetes runtime with image scanning on admission controller](https://sysdig.com/blog/image-scanning-admission-controller/) <nobr>📅 2021-02-18</nobr>
 * [Securing Tekton pipelines in OpenShift with Sysdig](https://sysdig.com/blog/securing-tekton-pipelines-openshift/) <nobr>📅 2020-04-09</nobr>
 * [Image scanning for CircleCI](https://sysdig.com/blog/image-scanning-circleci/) <nobr>📅 2020-02-20</nobr>
-* [Image scanning for Gitlab CI/CD](https://sysdig.com/blog/gitlab-ci-cd-image-scanning/) <nobr>📅 2020-01-26</nobr>
-* [Image Scanning with Github Actions](https://sysdig.com/blog/image-scanning-github-actions/) <nobr>📅 2020-01-14</nobr>
-* [AWS ECR Scanning with Sysdig Secure](https://sysdig.com/blog/aws-ecr-scanning/) <nobr>📅 2019-11-26</nobr>
+* [Image scanning for Gitlab CI/CD](https://sysdig.com/blog/gitlab-ci-cd-image-scanning/) <nobr>📅 2022-10-12</nobr>
+* [Image Scanning with Github Actions](https://sysdig.com/blog/image-scanning-github-actions/) <nobr>📅 2022-09-26</nobr>
+* [AWS ECR Scanning with Sysdig Secure](https://sysdig.com/blog/aws-ecr-scanning/) <nobr>📅 2021-11-23</nobr>
 * [Inline Image Scanning for AWS CodePipeline and AWS CodeBuild](https://sysdig.com/blog/image-scanning-aws-codepipeline-codebuild/) <nobr>📅 2019-11-26</nobr>
 * [Image scanning for Azure Pipelines](https://sysdig.com/blog/image-scanning-azure-pipelines/) <nobr>📅 2022-09-19</nobr>
-* [Docker scanning for Jenkins CI/CD security with the Sysdig Secure plugin](https://sysdig.com/blog/docker-scanning-jenkins/) <nobr>📅 2018-09-05</nobr>
+* [Container Image Scanning on Jenkins with Sysdig](https://sysdig.com/blog/docker-scanning-jenkins/) <nobr>📅 2022-10-26</nobr>
 
 # Contributing
 
