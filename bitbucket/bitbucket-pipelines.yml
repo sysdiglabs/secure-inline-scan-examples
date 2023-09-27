@@ -1,0 +1,36 @@
+# Prerequisites: $DOCKER_USERNAME, $DOCKER_PASSWORD, $DOCKER_REGISTRY and $SECURE_API_TOKEN  setup as deployment variables
+
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - step:
+        name: Download Sysdig CLI Scanner
+        script:
+          - curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
+          - chmod +x sysdig-cli-scanner
+        artifacts:
+          - sysdig-cli-scanner
+    - step:
+        name: Build image
+        script:
+          - IMAGE=${DOCKER_REGISTRY}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_BUILD_NUMBER}
+          - docker build . --file Dockerfile.log4j --tag ${IMAGE}
+          - docker save ${IMAGE} --output "${BITBUCKET_REPO_SLUG}.tar"
+        services:
+          - docker
+        artifacts:
+          - "*.tar"
+    - step:
+        name: Scan image
+        script:
+          - ./sysdig-cli-scanner --apiurl https://us2.app.sysdig.com --console-log  file://${BITBUCKET_REPO_SLUG}.tar 
+    - step:
+        name: Push image
+        script:
+          - echo ${DOCKER_PASSWORD} | docker login --username "$DOCKER_USERNAME" --password-stdin ${DOCKER_REGISTRY}
+          - IMAGE=${DOCKER_REGISTRY}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_BUILD_NUMBER}
+          - docker load --input "${BITBUCKET_REPO_SLUG}.tar"
+          - docker push ${IMAGE}
+        services:
+          - docker
