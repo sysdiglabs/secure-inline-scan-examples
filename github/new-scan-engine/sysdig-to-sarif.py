@@ -38,6 +38,7 @@ def generate_report(data):
         
         for vuln in package['vulns']:
             if vuln['name'] not in ruleIds:
+                ruleIds.append(vuln['name'])
                 rule = {
                     "id": f"{vuln['name']}",
                     "name": f"{package['type']}",
