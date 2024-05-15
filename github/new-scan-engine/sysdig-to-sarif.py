@@ -104,7 +104,7 @@ def generate_report(data):
         "columnKind": "utf16CodeUnits",
         "properties": {
             "pullString": f"{data['result']['metadata']['pullString']}",
-            "digest": f"{data['result']['metadata']['digest']}",
+            "digest": f"{(data['result']['metadata']['digest'] if 'digest' in data['result']['metadata'] else '')}",
             "imageId": f"{data['result']['metadata']['imageId']}",
             "architecture": f"{data['result']['metadata']['architecture']}",
             "baseOs": f"{data['result']['metadata']['baseOs']}",
