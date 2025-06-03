@@ -19,26 +19,31 @@ jobs:
       contents: read
     steps:
     - name: Check the latest version
+      id: check_version
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run:  |
+      run: |
         LATEST_VERSION=$(curl -sL https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)
         IMAGE_TAG=$(gh api -H "Accept: application/vnd.github+json" /orgs/sysdiglabs/packages/container/sysdig-cli-scanner/versions | jq -r 'sort_by(.created_at) | last | .metadata.container.tags[0]')
         if [[ ${LATEST_VERSION} != ${IMAGE_TAG} ]]; then
           echo "Container versions differ, building ${LATEST_VERSION}"
           echo "IMAGE_TAG=${LATEST_VERSION}" >> ${GITHUB_ENV}
+          echo "should_continue=true" >> $GITHUB_OUTPUT
         else
           echo "Container already using latest version"
-          exit 0
+          echo "should_continue=false" >> $GITHUB_OUTPUT
         fi
     
     - name: Checkout
+      if: steps.check_version.outputs.should_continue == 'true'
       uses: actions/checkout@v2
     
     - name: Set up Docker Buildx
+      if: steps.check_version.outputs.should_continue == 'true'
       uses: docker/setup-buildx-action@v2
     
     - name: Build and save
+      if: steps.check_version.outputs.should_continue == 'true'
       uses: docker/build-push-action@v3
       with:
         context: ${{ env.DOCKERFILE_CONTEXT }}
@@ -49,6 +54,7 @@ jobs:
           VERSION=${{ env.IMAGE_TAG }}
     
     - name: Setup cache
+      if: steps.check_version.outputs.should_continue == 'true'
       uses: actions/cache@v3
       with:
         path: cache
@@ -56,6 +62,7 @@ jobs:
         restore-keys: ${{ runner.os }}-cache-
 
     - name: Download sysdig-cli-scanner if needed
+      if: steps.check_version.outputs.should_continue == 'true'
       run:  |
         curl -sLO https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt
         mkdir -p ${GITHUB_WORKSPACE}/cache/db/
@@ -68,6 +75,7 @@ jobs:
         fi
 
     - name: Scan the image using sysdig-cli-scanner
+      if: steps.check_version.outputs.should_continue == 'true'
       env:
         SECURE_API_TOKEN: ${{ secrets.SECURE_API_TOKEN }}
       run: |
@@ -78,14 +86,16 @@ jobs:
           --dbpath=${GITHUB_WORKSPACE}/cache/db/ \
           --cachepath=${GITHUB_WORKSPACE}/cache/scanner-cache/ ||true
 
-    -  name: Login to the registry
-       uses: docker/login-action@v2
-       with:
+    - name: Login to the registry
+      if: steps.check_version.outputs.should_continue == 'true'
+      uses: docker/login-action@v2
+      with:
         registry: ${{ env.REGISTRY_HOST }}
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push
+      if: steps.check_version.outputs.should_continue == 'true'
       uses: docker/build-push-action@v3
       with:
         context: ${{ env.DOCKERFILE_CONTEXT }}
