@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -222,6 +223,11 @@ func getVulnFullDescription(pkg Package, vuln Vuln) string {
 		vuln.Name, vuln.Severity.Value, pkg.Name, pkg.Type, pkg.SuggestedFix, vuln.Name)
 }
 
+func sanitizeImageName(imageName string) string {
+	re := regexp.MustCompile(`[/:_]`)
+	return re.ReplaceAllString(imageName, "-")
+}
+
 func vulnerabilities2SARIF(data Report, groupByPackage bool) SARIF {
 	var rules []SARIFRule
 	var results []SARIFResult
@@ -308,7 +314,7 @@ func vulnerabilities2SARIFResByPackage(data Report) ([]SARIFRule, []SARIFResult)
 			Locations: []SARIFLocation{{
 				PhysicalLocation: SARIFPhysicalLocation{
 					ArtifactLocation: SARIFArtifactLocation{
-						Uri:       "file:///" + data.Result.Metadata.PullString,
+						Uri:       "file:///" + sanitizeImageName(data.Result.Metadata.PullString),
 						UriBaseId: "ROOTPATH",
 					},
 				},
@@ -352,7 +358,7 @@ func vulnerabilities2SARIFRes(data Report) ([]SARIFRule, []SARIFResult) {
 				Locations: []SARIFLocation{{
 					PhysicalLocation: SARIFPhysicalLocation{
 						ArtifactLocation: SARIFArtifactLocation{
-							Uri:       data.Result.Metadata.PullString,
+							Uri:       "file:///" + sanitizeImageName(data.Result.Metadata.PullString),
 							UriBaseId: "ROOTPATH",
 						},
 					},
